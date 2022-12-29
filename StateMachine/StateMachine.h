@@ -6,16 +6,17 @@
 
 namespace RCU {
 
-typedef std::unique_ptr<State> StateRef;
-
 struct State {
-    virtual void Init () = 0;
+    // Load Assets and Font
+    virtual void Init () = 0; 
     virtual void HandleInput () = 0;
     virtual void Update (float dt) = 0;
     virtual void Draw (float dt) = 0;
-    virtual void Pause ();
-    virtual void Resume ();
+    virtual void Pause () {};
+    virtual void Resume () {};
 };
+
+typedef std::unique_ptr<State> StateRef;
 
 class StateMachine {
 public:
@@ -23,7 +24,7 @@ public:
     ~StateMachine() {};
 
 public: 
-    void AddState(StateRef newState, bool isReplacing = true);
+    void AddState(StateRef newState, bool isReplacing=true);
     void RemoveState();
     void ProcessStateChanges();
     StateRef& GetActiveState();
