@@ -1,4 +1,5 @@
 #include "TCPServer.h"
+#include <thread>
 
 namespace RCU {
     TCPServer::TCPServer(int port, const char* name, int buffer) :
@@ -48,17 +49,27 @@ namespace RCU {
         std::cout << "Client Socket: " << client->Socket << std::endl;
         int result;
         result = send(client->Socket,"Hello\r\n",(int)strlen("Hello\r\n"),0);
-        if (result == SOCKET_ERROR) {
-            printf("send failed with error: %d\n", WSAGetLastError());
-            shutdown(client->Socket, SD_SEND);
-            closesocket(client->Socket);
-            WSACleanup();
-        return;
-        }
+        #if defined(_WIN32) || defined(_WIN64)
+            if (result == SOCKET_ERROR) {
+                printf("send failed with error: %d\n", WSAGetLastError());
+                shutdown(client->Socket, SD_SEND);
+                closesocket(client->Socket);
+                WSACleanup();
+            return;
+            }
+        #endif // WINDOWS
+        #if defined(linux) || defined(_unix_)
+            // TODO linux bad return
+        #endif // LINUX
 
         std::this_thread::sleep_for(std::chrono::seconds(2));
 
-        shutdown(client->Socket, SD_SEND);
-        closesocket(client->Socket);
+        #if defined(_WIN32) || defined(_WIN64)
+            shutdown(client->Socket, SD_SEND);
+            closesocket(client->Socket);
+        #endif // WINDOWS
+        #if defined(linux) || defined(_unix_)
+            close(client->Socket);
+        #endif // LINUX
     }
 }

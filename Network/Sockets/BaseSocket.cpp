@@ -45,8 +45,8 @@ namespace RCU
         #endif // WINDOWS
         #if defined(linux) || defined(_unix_)
             // Establish Socket
-            _sock = socket(_address.sin_family, _service, _protocol);
-            if(_sock == 0) {
+            _sock.Socket = socket(_address.sin_family, _service, _protocol);
+            if(_sock.Socket == 0) {
                 std::cout << "Failed to create socket" << std::endl;
                 return SOCK_INIT_FAIL;
             }

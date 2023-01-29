@@ -24,7 +24,7 @@ set_source_files_properties(
     COMPILE_OPTIONS "-w"
 )
     
-if(SFML)
+if(INCLUDE_SFML)
     add_subdirectory(Managers)
     add_subdirectory(StateMachine)
     add_subdirectory(GameData)

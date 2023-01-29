@@ -1,6 +1,7 @@
 #ifndef LISTENSOCKET_H
 #define LISTENSOCKET_H
 #include "BindingSocket.h"
+#include <memory>
 #include <string>
 
 namespace RCU 

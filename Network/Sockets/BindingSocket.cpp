@@ -7,7 +7,8 @@ namespace RCU
 
     int BindingSocket::_connectToPeer() {
         #if defined(linux) || defined(_unix_)
-            return bind(_sock, (struct sockaddr*)&_address, sizeof(_address));
+            int result = bind(_sock.Socket, (struct sockaddr*)&_address, sizeof(_address));
+            return result;
         #endif // LINUX
         #if defined(_WIN32) || defined(_WIN64)
             int result = bind( _sock.Socket, _result->ai_addr, (int)_result->ai_addrlen);

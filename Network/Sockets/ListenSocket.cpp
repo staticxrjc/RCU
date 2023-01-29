@@ -20,7 +20,7 @@ namespace RCU
             }
         #endif // WINDOWS
         #if defined(linux) || defined(_unix_)
-            result = listen(_sock,_backlog);
+            result = listen(_sock.Socket,_backlog);
         #endif // LINUX
         if(result < 0)  return result;
         else {

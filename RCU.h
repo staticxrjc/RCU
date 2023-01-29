@@ -7,11 +7,11 @@
 #include "Network/Server/TCPServer.h"
 // #endif
 
-// #ifdef SFML_UTIL
-// #include "StateMachine/StateMachine.h"
-// #include "Managers/AssetManager.h"
-// #include "Managers/InputManager.h"
-// #include "GameData/GameData.h"
-//#endif
+#ifdef SFML_UTIL
+#include "StateMachine/StateMachine.h"
+#include "Managers/AssetManager.h"
+#include "Managers/InputManager.h"
+#include "GameData/GameData.h"
+#endif
 
 #endif // RCU_H
