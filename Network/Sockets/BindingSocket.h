@@ -13,7 +13,7 @@ private:
     int _connectToPeer() override;
 
 public:
-    BindingSocket(int domain, int service, int protocol, int port, u_long iface, int backlog);
+    BindingSocket(int domain, int service, int protocol, u_short port, u_long iface, int backlog);
 };
 
 }

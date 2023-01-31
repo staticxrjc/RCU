@@ -3,4 +3,5 @@ add_library(
     BaseSocket.cpp
     BindingSocket.cpp
     ListenSocket.cpp
+    ConnectSocket.cpp
 )

@@ -16,6 +16,7 @@ add_library(
         ThreadpoolManager
         Socket
         Server
+        Client
     )
 
 set_source_files_properties(

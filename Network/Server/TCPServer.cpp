@@ -8,7 +8,7 @@ namespace RCU {
         }
 
     void TCPServer::_acceptor() {
-        std::cout << "Accepting" << std::endl;
+        std::cout << "Accepting on host [" << getName() << "]" <<std::endl;
         RCU::Network client;
         client.Socket = _listenSocket->acceptConnection()->Socket;
         threadpool.QueueJob([=](){_handleAccept(client);});

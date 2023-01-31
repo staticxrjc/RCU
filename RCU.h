@@ -5,6 +5,7 @@
 // #ifdef THREADPOOL
 #include "Threadpool/ThreadpoolManager.h"
 #include "Network/Server/TCPServer.h"
+#include "Network/Client/TCPClient.h"
 // #endif
 
 #ifdef SFML_UTIL

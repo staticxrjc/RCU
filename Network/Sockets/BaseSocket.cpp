@@ -2,17 +2,16 @@
 
 namespace RCU 
 {
-    BaseSocket::BaseSocket(int domain, int service, int protocol, int port, u_long iface) {
+    BaseSocket::BaseSocket(int domain, int service, int protocol, u_short port, u_long iface) {
+        _initialized = false;
         _service = service;
         _protocol = protocol;
         _port = port;
-        #if defined(linux) || defined(_unix_)
-            // Define Address Structure
-            _address.sin_family = domain;
-            _address.sin_port = htons(port);
-            _address.sin_addr.s_addr = htonl(iface);
-            memset(_address.sin_zero, '\0', sizeof _address.sin_zero);
-        #endif // LINUX
+        memset(&_address, '\0', sizeof(_address));
+        _address.sin_family = domain;
+        _address.sin_port = htons(port);
+        _address.sin_addr.s_addr = htonl(iface);
+
         #if defined(_WIN32) || defined(_WIN64)
             ZeroMemory(&_hints, sizeof(_hints));
             _hints.ai_family = domain;
@@ -23,6 +22,8 @@ namespace RCU
     }
 
     int BaseSocket::init() {
+        if(_initialized)
+            return RCU::INIT_FAILURE;
         #if defined(_WIN32) || defined(_WIN64)
             int result = WSAStartup(MAKEWORD(2,2),&_wsaData);
             if(result != 0) {
@@ -56,11 +57,25 @@ namespace RCU
             std::cout << "Failed to establish bind/connect" << std::endl;
             return CONNECT_ERROR; 
         }
+        _initialized = true;
         return SUCCESS;
     }
 
+    int BaseSocket::close() {
+        if(!_initialized)
+            return RCU::ALEADY_INITIALIZED;
+        #if defined(linux) || defined(_unix_)
+        #endif // LINUX
+        #if defined(_WIN32) || defined(_WIN64)
+            shutdown(_sock.Socket, SD_SEND);
+            closesocket(_sock.Socket);
+            WSACleanup();
+        #endif // WINDOWS
+        _initialized = false;
+        return RCU::SUCCESS;
+    }
 
     RCU::Network& BaseSocket::getSocket() { return _sock; }
     int BaseSocket::getConnection() { return _connection; }
-    int BaseSocket::getPort() { return _port; }
+    u_short BaseSocket::getPort() { return _port; }
 }

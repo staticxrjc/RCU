@@ -9,6 +9,7 @@ namespace RCU {
 class BaseServer {
 private:
     bool _running = false;
+    const char* _name;
 
 protected:
     ThreadpoolManager threadpool;
@@ -28,6 +29,7 @@ public:
      */
     virtual void start();
     void stop();
+    const char* getName();
 };
 
 }

@@ -28,7 +28,11 @@ typedef enum {
     INIT_FAILURE = -1,
     SOCK_INIT_FAIL = -2,
     CONNECT_ERROR = -3,
-    EXPANDED_INIT_FAILURE = -4
+    SEND_FAILURE = -4,
+    BAD_IP = -5,
+    FAILURE = -6,
+    ALEADY_INITIALIZED = -7,
+    NOT_INITIALIZED = -8
 } RCU_RESULT;
 
 struct Network {
@@ -49,28 +53,29 @@ struct Network {
 class BaseSocket {
 protected:
     RCU::Network _sock;
+    sockaddr_in _address;
+    bool _initialized;
+    virtual int _connectToPeer() = 0;
+
     #if defined(_WIN32) || defined(_WIN64)
         WSADATA _wsaData;
         struct addrinfo *_result = NULL;
+        struct addrinfo *_ptr = NULL;
         struct addrinfo _hints;
     #endif // WINDOWS
-    #if defined(linux) || defined(_unix_)
-        struct sockaddr_in _address;
-    #endif // LINUX
 
-    virtual int _connectToPeer() = 0;
 
 private:
     int _connection;
     int _service;
     int _protocol;
-    int _port;
+    u_short _port;
 
 public:
-    BaseSocket(int domain, int service, int protocol, int port, u_long iface);
+    BaseSocket(int domain, int service, int protocol, u_short port, u_long iface);
     RCU::Network& getSocket();
     int getConnection();
-    int getPort();
+    u_short getPort();
     /**
      * @brief Initializes socket
      * 
@@ -82,6 +87,7 @@ public:
      *  -4 = expanded init failed
      */
     int init();
+    virtual int close();
 };
 
 }

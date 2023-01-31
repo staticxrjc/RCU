@@ -2,6 +2,7 @@
 
 namespace RCU {
     BaseServer::BaseServer(int port, const char* name, int buffer) {
+        _name = name;
         _listenSocket = std::make_unique<ListenSocket>(
             AF_INET,
             SOCK_STREAM,
@@ -35,4 +36,6 @@ namespace RCU {
     void BaseServer::stop() {
         _running = false;
     }
+
+    const char* BaseServer::getName() { return _name; }
 }
