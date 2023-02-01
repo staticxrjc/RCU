@@ -10,7 +10,7 @@ class BindingSocket : public BaseSocket
 {
 private:
     int _backlog;
-    int _connectToPeer() override;
+    RCU::NetworkStatus _connectToPeer() override;
 
 public:
     BindingSocket(int domain, int service, int protocol, u_short port, u_long iface, int backlog);

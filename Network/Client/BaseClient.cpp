@@ -14,11 +14,11 @@ BaseClient::BaseClient(const char* ipAddress, int port, const char* name) {
     );
 }
 
-int BaseClient::BaseClient::init() {
-    if(_connectSocket->init() != RCU::SUCCESS) {
-        return RCU::INIT_FAILURE;
+RCU::NetworkStatus BaseClient::BaseClient::init() {
+    if(_connectSocket->init() != RCU::NetworkStatus::SUCCESS) {
+        return RCU::NetworkStatus::INIT_FAILURE;
     };
-    return RCU::SUCCESS;
+    return RCU::NetworkStatus::SUCCESS;
 
 }
 

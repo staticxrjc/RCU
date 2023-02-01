@@ -4,8 +4,8 @@
 #include <iostream>
 // #ifdef THREADPOOL
 #include "Threadpool/ThreadpoolManager.h"
-#include "Network/Server/TCPServer.h"
-#include "Network/Client/TCPClient.h"
+#include "Network/Network.h"
+#include "Logging/Logger.h"
 // #endif
 
 #ifdef SFML_UTIL

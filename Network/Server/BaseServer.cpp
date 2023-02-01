@@ -13,11 +13,11 @@ namespace RCU {
         );
     }
 
-    int BaseServer::init() {
+    RCU::NetworkStatus BaseServer::init() {
         if(_listenSocket->init() != 0) {
-            return INIT_FAILURE;
+            return RCU::NetworkStatus::INIT_FAILURE;
         };
-        return 0;
+        return RCU::NetworkStatus::SUCCESS;
     }
 
     void BaseServer::start() {

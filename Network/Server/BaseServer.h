@@ -21,7 +21,7 @@ protected:
 
 public:
     BaseServer(int port, const char* name, int buffer = 100);
-    int init();
+    RCU::NetworkStatus init();
     /**
      * @brief sends callback, passes recv into callback
      * 

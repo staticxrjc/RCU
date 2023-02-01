@@ -6,7 +6,7 @@ namespace RCU
 BindingSocket::BindingSocket(int domain, int service, int protocol, u_short port, u_long iface, int backlog) : 
     BaseSocket(domain, service, protocol, port, iface) { }
 
-int BindingSocket::_connectToPeer() {
+RCU::NetworkStatus BindingSocket::_connectToPeer() {
     #if defined(linux) || defined(_unix_)
         int result = bind(_sock.Socket, (struct sockaddr*)&_address, sizeof(_address));
         return result;
@@ -18,9 +18,9 @@ int BindingSocket::_connectToPeer() {
             freeaddrinfo(_result);
             closesocket(_sock.Socket);
             WSACleanup();
-            return RCU::FAILURE;
+            return RCU::NetworkStatus::FAILURE;
         }
-        return RCU::SUCCESS;
+        return RCU::NetworkStatus::SUCCESS;
     #endif // WINDOWS
 }
 

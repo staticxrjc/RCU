@@ -23,7 +23,7 @@
 
 namespace RCU 
 {
-typedef enum {
+enum class NetworkStatus {
     SUCCESS = 0,
     INIT_FAILURE = -1,
     SOCK_INIT_FAIL = -2,
@@ -33,7 +33,7 @@ typedef enum {
     FAILURE = -6,
     ALEADY_INITIALIZED = -7,
     NOT_INITIALIZED = -8
-} RCU_RESULT;
+};
 
 struct Network {
     Network() {
@@ -55,7 +55,7 @@ protected:
     RCU::Network _sock;
     sockaddr_in _address;
     bool _initialized;
-    virtual int _connectToPeer() = 0;
+    virtual RCU::NetworkStatus _connectToPeer() = 0;
 
     #if defined(_WIN32) || defined(_WIN64)
         WSADATA _wsaData;
@@ -66,7 +66,7 @@ protected:
 
 
 private:
-    int _connection;
+    RCU::NetworkStatus _connection;
     int _service;
     int _protocol;
     u_short _port;
@@ -74,7 +74,7 @@ private:
 public:
     BaseSocket(int domain, int service, int protocol, u_short port, u_long iface);
     RCU::Network& getSocket();
-    int getConnection();
+    RCU::NetworkStatus getConnection();
     u_short getPort();
     /**
      * @brief Initializes socket
@@ -86,8 +86,8 @@ public:
      *  -3 = failure to connect/bind
      *  -4 = expanded init failed
      */
-    int init();
-    virtual int close();
+    RCU::NetworkStatus init();
+    virtual RCU::NetworkStatus close();
 };
 
 }

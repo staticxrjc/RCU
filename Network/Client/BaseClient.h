@@ -7,7 +7,7 @@ namespace RCU {
 
 class BaseClient {
 protected:
-    int init();
+    RCU::NetworkStatus init();
     const char* _name;
     std::unique_ptr<ConnectSocket> _connectSocket;
 

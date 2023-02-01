@@ -21,14 +21,14 @@ namespace RCU
         #endif // WINDOWS
     }
 
-    int BaseSocket::init() {
+    RCU::NetworkStatus BaseSocket::init() {
         if(_initialized)
-            return RCU::INIT_FAILURE;
+            return RCU::NetworkStatus::INIT_FAILURE;
         #if defined(_WIN32) || defined(_WIN64)
             int result = WSAStartup(MAKEWORD(2,2),&_wsaData);
             if(result != 0) {
                 std::cout << "WSAStartup failed" << std::endl;
-                return INIT_FAILURE;
+                return RCU::NetworkStatus::INIT_FAILURE;
             }
             std::ostringstream oss;
             oss << _port;
@@ -36,12 +36,12 @@ namespace RCU
             if ( result != 0 ) {
                 printf("getaddrinfo failed");
                 WSACleanup();
-                return INIT_FAILURE;
+                return RCU::NetworkStatus::INIT_FAILURE;
             }
             _sock.Socket = socket(_result->ai_family, _result->ai_socktype, _result->ai_protocol);
             if(_sock.Socket == INVALID_SOCKET) {
                 std::cout << "Failed to create socket" << std::endl;
-                return SOCK_INIT_FAIL;
+                return RCU::NetworkStatus::SOCK_INIT_FAIL;
             }
         #endif // WINDOWS
         #if defined(linux) || defined(_unix_)
@@ -53,17 +53,17 @@ namespace RCU
             }
         #endif // LINUX
         _connection = _connectToPeer();
-        if(_connection < 0) {
+        if(_connection != RCU::NetworkStatus::SUCCESS) {
             std::cout << "Failed to establish bind/connect" << std::endl;
-            return CONNECT_ERROR; 
+            return RCU::NetworkStatus::CONNECT_ERROR; 
         }
         _initialized = true;
-        return SUCCESS;
+        return RCU::NetworkStatus::SUCCESS;
     }
 
-    int BaseSocket::close() {
+    RCU::NetworkStatus BaseSocket::close() {
         if(!_initialized)
-            return RCU::ALEADY_INITIALIZED;
+            return RCU::NetworkStatus::ALEADY_INITIALIZED;
         #if defined(linux) || defined(_unix_)
         #endif // LINUX
         #if defined(_WIN32) || defined(_WIN64)
@@ -72,10 +72,10 @@ namespace RCU
             WSACleanup();
         #endif // WINDOWS
         _initialized = false;
-        return RCU::SUCCESS;
+        return RCU::NetworkStatus::SUCCESS;
     }
 
     RCU::Network& BaseSocket::getSocket() { return _sock; }
-    int BaseSocket::getConnection() { return _connection; }
+    RCU::NetworkStatus BaseSocket::getConnection() { return _connection; }
     u_short BaseSocket::getPort() { return _port; }
 }

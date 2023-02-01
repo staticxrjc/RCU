@@ -7,13 +7,13 @@ ConnectSocket::ConnectSocket(int domain, int service, int protocol, u_short port
         _address.sin_addr.S_un.S_addr = inet_addr(ipAddress);
     }
 
-int ConnectSocket::_connectToPeer() {
-    return RCU::SUCCESS;
+RCU::NetworkStatus ConnectSocket::_connectToPeer() {
+    return RCU::NetworkStatus::SUCCESS;
 }
 
-int ConnectSocket::connect() {
+RCU::NetworkStatus ConnectSocket::connect() {
     if(!_initialized)
-        return RCU::NOT_INITIALIZED;
+        return RCU::NetworkStatus::NOT_INITIALIZED;
     printf("Connecting to Peer\n");
     #if defined(linux) || defined(_unix_)
         int result = ::connect(_sock.Socket, (struct sockaddr*)&_address, sizeof(_address));
@@ -37,31 +37,31 @@ int ConnectSocket::connect() {
             printf("Unable to connect to server!\n");
             WSACleanup();
             _initialized = false;
-            return RCU::CONNECT_ERROR;
+            return RCU::NetworkStatus::CONNECT_ERROR;
         }
 
         printf("Successfully Created Client.\n");
-        return RCU_RESULT::SUCCESS;
+        return RCU::NetworkStatus::SUCCESS;
     #endif // WINDOWS
 }
 
-int ConnectSocket::send(const char * sendbuf) {
+RCU::NetworkStatus ConnectSocket::send(const char * sendbuf) {
     if(!_initialized)
-        return RCU::NOT_INITIALIZED;
+        return RCU::NetworkStatus::NOT_INITIALIZED;
     printf("SEND: %s", sendbuf);
     int result = ::send( _sock.Socket, sendbuf, (int)strlen(sendbuf), 0 );
     if (result == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
         closesocket(_sock.Socket);
         WSACleanup();
-        return RCU::FAILURE;
+        return RCU::NetworkStatus::FAILURE;
     }
-    return RCU::SUCCESS;
+    return RCU::NetworkStatus::SUCCESS;
 }
 
-int ConnectSocket::recv() {
+RCU::NetworkStatus ConnectSocket::recv() {
     if(!_initialized)
-        return RCU::NOT_INITIALIZED;
+        return RCU::NetworkStatus::NOT_INITIALIZED;
     char buffer[1024];
     _recvMessage = "";
 
@@ -71,7 +71,7 @@ int ConnectSocket::recv() {
     }
 
     std::cout << "RECV: " << _recvMessage << "\n"; 
-    return SUCCESS;
+    return RCU::NetworkStatus::SUCCESS;
 }
 
 }

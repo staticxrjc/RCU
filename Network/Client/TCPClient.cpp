@@ -8,12 +8,12 @@ TCPClient::TCPClient(const char* ipAddress, int port, const char* name) :
     }
 
 void TCPClient::send(const char* sendbuf) {
-    if(_connectSocket->send(sendbuf) != RCU::SUCCESS)
+    if(_connectSocket->send(sendbuf) != RCU::NetworkStatus::SUCCESS)
         printf("FAILED TO SEND\n");
 }
 
 void TCPClient::recv() {
-    if(_connectSocket->recv() != RCU::SUCCESS)
+    if(_connectSocket->recv() != RCU::NetworkStatus::SUCCESS)
         printf("FAILED TO RECV\n");
 }
 
@@ -21,13 +21,13 @@ void TCPClient::close(){
     _connectSocket->close();
 }
 
-int TCPClient::connect() {
+RCU::NetworkStatus TCPClient::connect() {
     init();
-    if(_connectSocket->connect() != RCU::SUCCESS) {
+    if(_connectSocket->connect() != RCU::NetworkStatus::SUCCESS) {
         printf("CONNECT FAILED\n");
-        return RCU::CONNECT_ERROR;
+        return RCU::NetworkStatus::CONNECT_ERROR;
     }
-    return RCU::SUCCESS;
+    return RCU::NetworkStatus::SUCCESS;
 }
 
 }

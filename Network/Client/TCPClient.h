@@ -11,7 +11,7 @@ public:
     void send(const char* sendbuf);
     void recv();
     void close();
-    int connect();
+    RCU::NetworkStatus connect();
 };
 
 }
