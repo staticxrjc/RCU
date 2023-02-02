@@ -5,13 +5,13 @@ namespace RCU
 
 void LogTransport::_updateTime()
 {
-    auto t = std::chrono::high_resolution_clock::now();
-    _epoch = t.time_since_epoch().count();
+    auto t = duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch());
+    _epoch = static_cast<double>(t.count());
 }
 
-unsigned int LogTransport::_getTimeMs() {
+double LogTransport::_getTimeMs() {
     _updateTime();
-    return _epoch;
+    return _epoch/1000;
 }
 
 LogTransport::LogTransport() {

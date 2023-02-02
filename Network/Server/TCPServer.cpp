@@ -7,6 +7,10 @@ namespace RCU {
             threadpool.Start();
         }
 
+    TCPServer::~TCPServer() {
+        threadpool.Stop();
+    }
+
     void TCPServer::_acceptor() {
         std::cout << "Accepting on host [" << getName() << "]" <<std::endl;
         RCU::Network client;

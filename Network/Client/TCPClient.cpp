@@ -12,9 +12,13 @@ void TCPClient::send(const char* sendbuf) {
         printf("FAILED TO SEND\n");
 }
 
-void TCPClient::recv() {
-    if(_connectSocket->recv() != RCU::NetworkStatus::SUCCESS)
+std::string TCPClient::recv() {
+    if(_connectSocket->recv() != RCU::NetworkStatus::SUCCESS) {
         printf("FAILED TO RECV\n");
+        return "";
+    }
+    else
+        return _connectSocket->getRecvMessage();
 }
 
 void TCPClient::close(){

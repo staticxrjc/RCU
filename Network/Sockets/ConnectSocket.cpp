@@ -14,7 +14,6 @@ RCU::NetworkStatus ConnectSocket::_connectToPeer() {
 RCU::NetworkStatus ConnectSocket::connect() {
     if(!_initialized)
         return RCU::NetworkStatus::NOT_INITIALIZED;
-    printf("Connecting to Peer\n");
     #if defined(linux) || defined(_unix_)
         int result = ::connect(_sock.Socket, (struct sockaddr*)&_address, sizeof(_address));
         return result;
@@ -39,8 +38,6 @@ RCU::NetworkStatus ConnectSocket::connect() {
             _initialized = false;
             return RCU::NetworkStatus::CONNECT_ERROR;
         }
-
-        printf("Successfully Created Client.\n");
         return RCU::NetworkStatus::SUCCESS;
     #endif // WINDOWS
 }
@@ -48,7 +45,6 @@ RCU::NetworkStatus ConnectSocket::connect() {
 RCU::NetworkStatus ConnectSocket::send(const char * sendbuf) {
     if(!_initialized)
         return RCU::NetworkStatus::NOT_INITIALIZED;
-    printf("SEND: %s", sendbuf);
     int result = ::send( _sock.Socket, sendbuf, (int)strlen(sendbuf), 0 );
     if (result == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
@@ -66,12 +62,15 @@ RCU::NetworkStatus ConnectSocket::recv() {
     _recvMessage = "";
 
     int nDataLength;
-    while ((nDataLength = ::recv(_sock.Socket, buffer, sizeof(buffer), 0)) > 0) {
+    while ((nDataLength = ::recv(_sock.Socket, buffer, sizeof(buffer), 0)) >= 0) {
         _recvMessage.append(buffer, nDataLength);
     }
 
-    std::cout << "RECV: " << _recvMessage << "\n"; 
     return RCU::NetworkStatus::SUCCESS;
+}
+
+std::string ConnectSocket::getRecvMessage() {
+    return _recvMessage;
 }
 
 }

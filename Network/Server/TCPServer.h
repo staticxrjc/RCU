@@ -14,6 +14,7 @@ protected:
     virtual void _responder(std::shared_ptr<RCU::Network> client) override;
 public:
     TCPServer(int port, const char* name, int buffer);
+    ~TCPServer();
 };
 
 }

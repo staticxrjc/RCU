@@ -9,7 +9,7 @@ class TCPClient : public BaseClient {
 public:
     TCPClient(const char* ipAddress, int port, const char* name);
     void send(const char* sendbuf);
-    void recv();
+    std::string recv();
     void close();
     RCU::NetworkStatus connect();
 };

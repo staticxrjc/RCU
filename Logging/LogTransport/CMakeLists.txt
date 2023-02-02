@@ -3,3 +3,10 @@ add_library(LogTransport
 )
 
 add_subdirectory(Console)
+add_subdirectory(Graylog)
+
+target_link_libraries(
+    LogTransport 
+    Console
+    Graylog
+)

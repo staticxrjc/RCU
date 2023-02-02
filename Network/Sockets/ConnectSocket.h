@@ -15,6 +15,7 @@ public:
     RCU::NetworkStatus connect();
     RCU::NetworkStatus send(const char * message);
     RCU::NetworkStatus recv();
+    std::string getRecvMessage();
 };
 
 }
