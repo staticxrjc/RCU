@@ -17,16 +17,16 @@ protected:
 private:
     RCU::LogType _currentLogLevel;
     RCU::ThreadpoolManager _threadpool;
-    void _sendLogs(RCU::LogType level, const char* message, const char* fullMessage);
+    void _sendLogs(RCU::LogType level, const std::string &message, const std::string &fullMessage);
 
 public:
     Logger();
     ~Logger();
-    void fatal(const char* message, const char* fullMessage = nullptr);
-    void error(const char* message, const char* fullMessage = nullptr);
-    void warning(const char* message, const char* fullMessage = nullptr);
-    void info(const char* message, const char* fullMessage = nullptr);
-    void debug(const char* message, const char* fullMessage = nullptr);
+    void fatal(const std::string &message, const std::string &fullMessage = "");
+    void error(const std::string &message, const std::string &fullMessage = "");
+    void warning(const std::string &message, const std::string &fullMessage = "");
+    void info(const std::string &message, const std::string &fullMessage = "");
+    void debug(const std::string &message, const std::string &fullMessage = "");
 };                                 
 
 }

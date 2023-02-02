@@ -12,7 +12,7 @@ class Console : public LogTransport
 {
 public:
     Console();
-    RCU::LogStatus sendLog(RCU::LogType level, const char* message, const char* fullMessage) override;
+    RCU::LogStatus sendLog(RCU::LogType level, std::string_view message, std::string_view fullMessage) override;
 }; 
     
 } // namespace RCU

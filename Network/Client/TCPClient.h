@@ -8,7 +8,7 @@ namespace RCU {
 class TCPClient : public BaseClient {
 public:
     TCPClient(const char* ipAddress, int port, const char* name);
-    void send(const char* sendbuf);
+    void send(std::string_view sendbuf);
     std::string recv();
     void close();
     RCU::NetworkStatus connect();

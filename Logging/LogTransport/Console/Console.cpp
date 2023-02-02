@@ -6,7 +6,7 @@ namespace RCU
 
 Console::Console() : LogTransport() {}
 
-RCU::LogStatus Console::sendLog(RCU::LogType level, const char *message, const char *fullMessage)
+RCU::LogStatus Console::sendLog(RCU::LogType level, std::string_view message, std::string_view fullMessage)
 {
     {
         std::unique_lock lock(_mutex);
@@ -31,6 +31,8 @@ RCU::LogStatus Console::sendLog(RCU::LogType level, const char *message, const c
         }  
         auto time = _getTimeMs();
         std::cout << std::to_string(time) << "]: " << message << std::endl;
+        if(fullMessage != message)
+            std::cout << "[FULLMESSAGE]:\n " << fullMessage << std::endl;
     }
     return RCU::LogStatus::SUCCESS;
 }

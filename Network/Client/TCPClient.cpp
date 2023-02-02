@@ -7,8 +7,8 @@ TCPClient::TCPClient(const char* ipAddress, int port, const char* name) :
         printf("Establishing Client [%s]\n",name);
     }
 
-void TCPClient::send(const char* sendbuf) {
-    if(_connectSocket->send(sendbuf) != RCU::NetworkStatus::SUCCESS)
+void TCPClient::send(std::string_view sendbuf) {
+    if(_connectSocket->send(std::string(sendbuf).c_str()) != RCU::NetworkStatus::SUCCESS)
         printf("FAILED TO SEND\n");
 }
 

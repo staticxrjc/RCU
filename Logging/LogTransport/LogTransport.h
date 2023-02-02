@@ -25,7 +25,7 @@ public:
     LogTransport();
     void enable();
     void disable();
-    virtual RCU::LogStatus sendLog(LogType LogType, const char* LogContext, const char* fullMessage) = 0;
+    virtual RCU::LogStatus sendLog(LogType LogType, std::string_view LogContext, std::string_view fullMessage) = 0;
 };
     
 } // namespace RCU

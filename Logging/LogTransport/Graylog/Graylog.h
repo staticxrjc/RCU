@@ -11,12 +11,12 @@ class Graylog : public LogTransport {
 private:
     std::unique_ptr<RCU::TCPClient> _logServer;
     const char* _ip;
-    const char* _serviceName;
+    std::string _serviceName;
     unsigned short _port;
 
 public:
-    Graylog(const char* ip, unsigned short port, const char* serviceName);
-    RCU::LogStatus sendLog(RCU::LogType LogType, const char* message, const char* fullMessage) override;
+    Graylog(const char* ip, unsigned short port, const std::string &serviceName);
+    RCU::LogStatus sendLog(RCU::LogType LogType, std::string_view message, std::string_view fullMessage) override;
 
 };
     
