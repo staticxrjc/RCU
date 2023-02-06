@@ -10,6 +10,13 @@
 namespace RCU {
 
 class LogTransport;
+struct AllocationMetrics
+{
+    uint32_t totalAllocated = 0;
+    uint32_t totalFreed = 0;
+    uint32_t currentUsage();
+};
+
 class Logger {
 protected:
     std::vector<std::unique_ptr<RCU::LogTransport>> _transport;
@@ -27,6 +34,7 @@ public:
     void warning(const std::string &message, const std::string &fullMessage = "");
     void info(const std::string &message, const std::string &fullMessage = "");
     void debug(const std::string &message, const std::string &fullMessage = "");
+    static std::string Memory();
 };                                 
 
 }
