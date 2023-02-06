@@ -5,7 +5,7 @@ namespace RCU
 
 void LogTransport::_updateTime()
 {
-    auto t = duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch());
+    auto t = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch());
     _epoch = static_cast<double>(t.count());
 }
 

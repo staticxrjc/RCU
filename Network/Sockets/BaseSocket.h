@@ -13,10 +13,12 @@
     // #pragma comment (lib, "Mswsock.lib")
 #endif // WINDOWS
 
-#if defined(linux) || defined(_unix_)
+#if defined(__linux__) || defined(_unix_)
     #include <sys/socket.h>
     #include <netinet/in.h>
     #include <string.h>
+    #include <arpa/inet.h>
+    #include <unistd.h>
 #endif // LINUX
 
 #include <iostream>
@@ -44,7 +46,7 @@ struct Network {
     #if defined(_WIN32) || defined(_WIN64)
         SOCKET Socket;
     #endif // WINDOWS
-    #if defined(linux) || defined(_unix_)
+    #if defined(__linux__) || defined(_unix_)
         int Socket;
     #endif // LINUX
 };

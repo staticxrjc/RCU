@@ -44,12 +44,12 @@ namespace RCU
                 return RCU::NetworkStatus::SOCK_INIT_FAIL;
             }
         #endif // WINDOWS
-        #if defined(linux) || defined(_unix_)
+        #if defined(__linux__) || defined(_unix_)
             // Establish Socket
             _sock.Socket = socket(_address.sin_family, _service, _protocol);
             if(_sock.Socket == 0) {
                 std::cout << "Failed to create socket" << std::endl;
-                return SOCK_INIT_FAIL;
+                return RCU::NetworkStatus::SOCK_INIT_FAIL;
             }
         #endif // LINUX
         _connection = _connectToPeer();

@@ -8,6 +8,7 @@ namespace RCU {
 class ConnectSocket : public BaseSocket {
 private:
     RCU::NetworkStatus _connectToPeer() override;
+    RCU::NetworkStatus _addressResult;
     std::string _recvMessage;
 
 public:

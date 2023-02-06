@@ -4,7 +4,16 @@ namespace RCU {
 
 ConnectSocket::ConnectSocket(int domain, int service, int protocol, u_short port, u_long iface, const char* ipAddress) :
     BaseSocket(domain, service, protocol, port, iface) { 
-        _address.sin_addr.S_un.S_addr = inet_addr(ipAddress);
+        #if defined(_WIN32) || defined(_WIN64)
+            _address.sin_addr.S_un.S_addr = inet_addr(ipAddress);
+        #endif // WINDOWS
+        #if defined(__linux__) || defined(_unix_)
+            if(inet_pton(AF_INET, ipAddress, &_address.sin_addr)<0)
+                _addressResult = RCU::NetworkStatus::BAD_IP;
+            else
+                _addressResult = RCU::NetworkStatus::SUCCESS;
+
+        #endif // LINUX
     }
 
 RCU::NetworkStatus ConnectSocket::_connectToPeer() {
@@ -14,9 +23,12 @@ RCU::NetworkStatus ConnectSocket::_connectToPeer() {
 RCU::NetworkStatus ConnectSocket::connect() {
     if(!_initialized)
         return RCU::NetworkStatus::NOT_INITIALIZED;
-    #if defined(linux) || defined(_unix_)
+    #if defined(__linux__) || defined(_unix_)
+        if(_addressResult == RCU::NetworkStatus::BAD_IP)
+            return _addressResult;
         int result = ::connect(_sock.Socket, (struct sockaddr*)&_address, sizeof(_address));
-        return result;
+        if(result < 0)
+            return RCU::NetworkStatus::CONNECT_ERROR;
     #endif // LINUX
     #if defined(_WIN32) || defined(_WIN64)
         // Attempt to connect to an address until one succeeds
@@ -38,20 +50,30 @@ RCU::NetworkStatus ConnectSocket::connect() {
             _initialized = false;
             return RCU::NetworkStatus::CONNECT_ERROR;
         }
-        return RCU::NetworkStatus::SUCCESS;
     #endif // WINDOWS
+    return RCU::NetworkStatus::SUCCESS;
 }
 
 RCU::NetworkStatus ConnectSocket::send(const char * sendbuf) {
     if(!_initialized)
         return RCU::NetworkStatus::NOT_INITIALIZED;
-    int result = ::send( _sock.Socket, sendbuf, (int)strlen(sendbuf), 0 );
-    if (result == SOCKET_ERROR) {
-        printf("send failed with error: %d\n", WSAGetLastError());
-        closesocket(_sock.Socket);
-        WSACleanup();
-        return RCU::NetworkStatus::FAILURE;
-    }
+    #if defined(__linux__) || defined(_unix_)
+        if(::send(_sock.Socket, sendbuf, strlen(sendbuf) , 0 )<0) {
+            printf("send failed\n");
+            shutdown(_sock.Socket,SHUT_RDWR);
+            ::close(_sock.Socket);
+            return RCU::NetworkStatus::FAILURE;
+        }
+    #endif // LINUX
+    #if defined(_WIN32) || defined(_WIN64)
+        int result = ::send( _sock.Socket, sendbuf, (int)strlen(sendbuf), 0 );
+        if (result == SOCKET_ERROR) {
+            printf("send failed with error: %d\n", WSAGetLastError());
+            closesocket(_sock.Socket);
+            WSACleanup();
+            return RCU::NetworkStatus::FAILURE;
+        }
+    #endif // WINDOWS
     return RCU::NetworkStatus::SUCCESS;
 }
 

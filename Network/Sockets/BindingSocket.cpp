@@ -7,9 +7,11 @@ BindingSocket::BindingSocket(int domain, int service, int protocol, u_short port
     BaseSocket(domain, service, protocol, port, iface) { }
 
 RCU::NetworkStatus BindingSocket::_connectToPeer() {
-    #if defined(linux) || defined(_unix_)
+    #if defined(__linux__) || defined(_unix_)
         int result = bind(_sock.Socket, (struct sockaddr*)&_address, sizeof(_address));
-        return result;
+        if(result < 0)
+            return RCU::NetworkStatus::FAILURE;
+        return RCU::NetworkStatus::SUCCESS;
     #endif // LINUX
     #if defined(_WIN32) || defined(_WIN64)
         int result = bind( _sock.Socket, _result->ai_addr, (int)_result->ai_addrlen);

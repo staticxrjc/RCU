@@ -40,5 +40,6 @@ namespace RCU
             }
             return _client;
         #endif // WINDOWS
+        return nullptr;
     }
 }

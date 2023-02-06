@@ -14,11 +14,11 @@ add_library(
     )
 
     target_link_libraries(${PROJECT_NAME} 
+        Logger
         ThreadpoolManager
         Socket
         Server
         Client
-        Logger
     )
 
 set_source_files_properties(
