@@ -14,7 +14,7 @@ protected:
 
 public:
     BaseClient(const char *ipAddress, int port, const char* name);
-
+    virtual ~BaseClient();
 };
 
 }

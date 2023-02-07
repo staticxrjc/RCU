@@ -10,6 +10,11 @@ Graylog::Graylog(const char *ip, unsigned short port, const std::string &service
     _logServer = std::make_unique<RCU::TCPClient>(_ip,_port,_serviceName.c_str());
 }
 
+Graylog::~Graylog() {
+    printf("Destroying Graylog\n");
+    _logServer.reset();
+}
+
 RCU::LogStatus Graylog::sendLog(RCU::LogType level, std::string_view message, std::string_view fullMessage)
 {
     std::string epochTime = std::to_string (_getTimeMs());

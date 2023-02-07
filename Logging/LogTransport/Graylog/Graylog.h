@@ -16,6 +16,7 @@ private:
 
 public:
     Graylog(const char* ip, unsigned short port, const std::string &serviceName);
+    ~Graylog();
     RCU::LogStatus sendLog(RCU::LogType LogType, std::string_view message, std::string_view fullMessage) override;
 
 };

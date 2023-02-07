@@ -6,16 +6,11 @@
 #include "LogTransport/Console/Console.h"
 #include "LogTransport/Graylog/Graylog.h"
 #include "../Threadpool/ThreadpoolManager.h"
+#include <map>
 
 namespace RCU {
 
 class LogTransport;
-struct AllocationMetrics
-{
-    uint32_t totalAllocated = 0;
-    uint32_t totalFreed = 0;
-    uint32_t currentUsage();
-};
 
 class Logger {
 protected:
@@ -28,13 +23,12 @@ private:
 
 public:
     Logger();
-    ~Logger();
+    virtual ~Logger();
     void fatal(const std::string &message, const std::string &fullMessage = "");
     void error(const std::string &message, const std::string &fullMessage = "");
     void warning(const std::string &message, const std::string &fullMessage = "");
     void info(const std::string &message, const std::string &fullMessage = "");
     void debug(const std::string &message, const std::string &fullMessage = "");
-    static std::string Memory();
 };                                 
 
 }

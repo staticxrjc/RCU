@@ -16,9 +16,9 @@ add_library(
     target_link_libraries(${PROJECT_NAME} 
         Logger
         ThreadpoolManager
-        Socket
         Server
         Client
+        Socket
     )
 
 set_source_files_properties(

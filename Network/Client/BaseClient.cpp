@@ -14,7 +14,12 @@ BaseClient::BaseClient(const char* ipAddress, int port, const char* name) {
     );
 }
 
-RCU::NetworkStatus BaseClient::BaseClient::init() {
+BaseClient::~BaseClient() {
+    printf("Destroying Socket\n");
+    _connectSocket.reset();
+}
+
+RCU::NetworkStatus BaseClient::init() {
     if(_connectSocket->init() != RCU::NetworkStatus::SUCCESS) {
         return RCU::NetworkStatus::INIT_FAILURE;
     };

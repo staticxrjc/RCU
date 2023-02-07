@@ -18,6 +18,10 @@ LogTransport::LogTransport() {
     _enabled = true;
 }
 
+LogTransport::~LogTransport() {
+    printf("Destroying Transport\n");
+}
+
 void LogTransport::enable() { _enabled = true; }
 void LogTransport::disable() { _enabled = false; }
 

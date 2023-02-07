@@ -23,6 +23,7 @@ protected:
 
 public:
     LogTransport();
+    virtual ~LogTransport();
     void enable();
     void disable();
     virtual RCU::LogStatus sendLog(LogType LogType, std::string_view LogContext, std::string_view fullMessage) = 0;
