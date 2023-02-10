@@ -58,7 +58,7 @@ bool ThreadpoolManager::Busy()
     bool poolBusy;
     {
         std::unique_lock<std::mutex> lock(_QueueMutex);
-        poolBusy = _Jobs.empty();
+        poolBusy = !_Jobs.empty();
     }
     return poolBusy;
 }

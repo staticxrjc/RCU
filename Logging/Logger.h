@@ -7,6 +7,7 @@
 #include "LogTransport/Graylog/Graylog.h"
 #include "../Threadpool/ThreadpoolManager.h"
 #include <map>
+#include <mutex>
 
 namespace RCU {
 
@@ -17,6 +18,7 @@ protected:
     std::vector<std::unique_ptr<RCU::LogTransport>> _transport;
 
 private:
+    std::mutex _mtx;
     RCU::LogType _currentLogLevel;
     RCU::ThreadpoolManager _threadpool;
     void _sendLogs(RCU::LogType level, const std::string &message, const std::string &fullMessage);
@@ -29,6 +31,7 @@ public:
     void warning(const std::string &message, const std::string &fullMessage = "");
     void info(const std::string &message, const std::string &fullMessage = "");
     void debug(const std::string &message, const std::string &fullMessage = "");
+    void awaitSendLogs();
 };                                 
 
 }
