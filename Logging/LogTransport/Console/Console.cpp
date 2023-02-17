@@ -4,7 +4,7 @@
 namespace RCU
 {
 
-Console::Console() : LogTransport() {}
+Console::Console() : LogTransport() { this->_colorSupport = true; }
 
 RCU::LogStatus Console::sendLog(RCU::LogType level, std::string_view message, std::string_view fullMessage)
 {

@@ -14,9 +14,7 @@ double LogTransport::_getTimeMs() {
     return _epoch/1000;
 }
 
-LogTransport::LogTransport() {
-    _enabled = true;
-}
+LogTransport::LogTransport() : _enabled(true), _colorSupport(false) { }
 
 LogTransport::~LogTransport() {
     printf("Destroying Transport\n");
@@ -24,5 +22,7 @@ LogTransport::~LogTransport() {
 
 void LogTransport::enable() { _enabled = true; }
 void LogTransport::disable() { _enabled = false; }
+bool LogTransport::getStatus() { return _enabled; }
+bool LogTransport::getColorSupport() { return this->_colorSupport; }
 
 } // namespace RCU
