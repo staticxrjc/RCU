@@ -10,6 +10,7 @@ TCPClient::TCPClient(const char* ipAddress, int port, const char* name) :
 void TCPClient::send(std::string_view sendbuf) {
     if(_connectSocket->send(std::string(sendbuf).c_str()) != RCU::NetworkStatus::SUCCESS)
         printf("FAILED TO SEND\n");
+    printf("SENT DATA\n");
 }
 
 std::string TCPClient::recv() {
@@ -31,6 +32,7 @@ RCU::NetworkStatus TCPClient::connect() {
         printf("CONNECT FAILED\n");
         return RCU::NetworkStatus::CONNECT_ERROR;
     }
+    printf("CONNECTED\n");
     return RCU::NetworkStatus::SUCCESS;
 }
 
