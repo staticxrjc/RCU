@@ -24,6 +24,17 @@ struct JSON {
         Object,
         Array
     };
+    
+    enum class Token {
+        OPEN_CURLY,
+        CLOSE_CURLY,
+        QUOTE,
+        COLON,
+        OPEN_BRACKET,
+        CLOSE_BRACKET,
+        FORWARD_SLASH,
+        NONE
+    };
 };
 
 template<typename T>
@@ -128,7 +139,7 @@ struct JSONArray : JSONContainer<jArray> {
         std::cout << "]\n";
     }
 };
-    
+
 } // namespace RCU
 
 #endif // JSONVALUE_H
