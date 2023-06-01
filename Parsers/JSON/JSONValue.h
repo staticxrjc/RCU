@@ -33,6 +33,7 @@ struct JSON {
         OPEN_BRACKET,
         CLOSE_BRACKET,
         FORWARD_SLASH,
+        COMMA,
         NONE
     };
 };
