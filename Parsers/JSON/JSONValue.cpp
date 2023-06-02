@@ -44,7 +44,7 @@ namespace RCU
 // }
 
 // Constructors
-template JSONValue<int>::JSONValue();
+template JSONValue<float>::JSONValue();
 template JSONValue<bool>::JSONValue();
 template JSONValue<std::string>::JSONValue(std::string val);
 template JSONValue<std::string>::JSONValue();
@@ -52,7 +52,7 @@ template JSONValue<jObject>::JSONValue();
 template JSONValue<jArray>::JSONValue();
 
 // Destructors
-template JSONValue<int>::~JSONValue();
+template JSONValue<float>::~JSONValue();
 template JSONValue<bool>::~JSONValue();
 template JSONValue<jObject>::~JSONValue();
 template JSONValue<jArray>::~JSONValue();

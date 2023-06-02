@@ -12,8 +12,8 @@ template<typename T>
 struct JSONValue;
 struct JSONContainerBase;
 
-using jObject = std::unordered_map<std::string,std::unique_ptr<JSONContainerBase>>;
-using jArray = std::vector<std::unique_ptr<JSONContainerBase>>;
+using jObject = std::unordered_map<std::string,std::shared_ptr<JSONContainerBase>>;
+using jArray = std::vector<std::shared_ptr<JSONContainerBase>>;
 
 struct JSON {
     enum class Type {
@@ -54,10 +54,10 @@ public:
 struct JSONContainerBase {
     int tab = 2;
     virtual void setValue(std::string val) {}
-    virtual void setValue(int val) {}
+    virtual void setValue(float val) {}
     virtual void setValue(bool) {}
     virtual std::string getString() = 0;
-    virtual int getNumber() = 0;
+    virtual float getNumber() = 0;
     virtual bool getBool() = 0;
     virtual jObject& getObject() { jObject nil; return nil; }
     virtual jArray& getArray() { jArray nil; return nil; }
@@ -70,13 +70,13 @@ struct JSONContainer : JSONContainerBase, JSONValue<T> {
     JSONValue<T> Json;
 };
 
-struct JSONNumber : JSONContainer<int> {
+struct JSONNumber : JSONContainer<float> {
     JSONNumber(int val = 0) { Json.value = val; }
-    void setValue(int val) override { Json.value = val; }
-    int getNumber() override { return Json.value; }
+    void setValue(float val) override { Json.value = val; }
+    float getNumber() override { return Json.value; }
     std::string getString() override { return std::to_string(Json.value); }
     bool getBool() override { return (Json.value == 0) ? false : true; }
-    void printSelf(int level = 0) override { 
+    void printSelf(int level = 0.0f) override { 
         std::cout << getString() << std::endl;
     }
 };
@@ -84,7 +84,7 @@ struct JSONNumber : JSONContainer<int> {
 struct JSONString : JSONContainer<std::string> {
     JSONString(std::string val = "") { Json.value = val; }
     void setValue(std::string val) override { Json.value = val; }
-    int getNumber() override { return std::stoi(Json.value); }
+    float getNumber() override { return std::stoi(Json.value); }
     std::string getString() override { return Json.value; }
     bool getBool() override { return (Json.value == "true") ? true : false; }
     void printSelf(int level = 0) override { 
@@ -95,7 +95,7 @@ struct JSONString : JSONContainer<std::string> {
 struct JSONBool : JSONContainer<bool> {
     JSONBool(bool val = false) { Json.value = val; }
     void setValue(bool val) override { Json.value = val; }
-    int getNumber() override { return Json.value ? 1 : 0; }
+    float getNumber() override { return Json.value ? 1 : 0; }
     std::string getString() override { return Json.value ? "true" : "false"; }
     bool getBool() override { return Json.value; }
     void printSelf(int level = 0) override { 
@@ -104,7 +104,7 @@ struct JSONBool : JSONContainer<bool> {
 };
 
 struct JSONObject : JSONContainer<jObject> {
-    int getNumber() override { return 0; }
+    float getNumber() override { return 0; }
     std::string getString() override { return ""; }
     bool getBool() override { return true; }
     jObject& getObject() override { return Json.value; }
@@ -123,14 +123,14 @@ struct JSONObject : JSONContainer<jObject> {
 };
 
 struct JSONArray : JSONContainer<jArray> {
-    int getNumber() override { return 0; }
+    float getNumber() override { return 0; }
     std::string getString() override { return ""; }
     bool getBool() override { return true; }
     jArray& getArray() override { return Json.value; }
     void printSelf(int level = 0) override { 
         std::cout << "[";
         for(int i = 0; i < Json.value.size(); i++) {
-            Json.value[i]->printSelf(level);
+            Json.value.at(i)->printSelf(level);
             if(i != (Json.value.size()-1)) {
                 printSpaces(level);
                 std::cout << ",";
