@@ -22,10 +22,12 @@ void JSONParser::createObject(const std::string& key) {
     std::shared_ptr<JSONContainerBase> baseRef = mRootJSON["root"];
     bool arrayUsed;
     for(auto& value : mBreadcrumb) {
+        arrayUsed = false;
+        if (&value == &mBreadcrumb.front()) continue;
         if (&value == &mBreadcrumb.back()) // Last item
             if(value.first == JSON::Type::Array) {
-                std::cout << ".emplace_back(std::make_shared<RCU::JSONObject>())" << std::endl;
-                baseRef->getArray().emplace_back(std::make_shared<RCU::JSONObject>());
+                std::cout << "getObject()[" << value.second << "]->getArray().emplace_back(std::make_shared<RCU::JSONObject>())" << std::endl;
+                baseRef->getObject()[value.second]->getArray().emplace_back(std::make_shared<RCU::JSONObject>());
                 return;
             }
             else {
@@ -34,7 +36,7 @@ void JSONParser::createObject(const std::string& key) {
                 return;
             }
         if(value.first == JSON::Type::Array) {
-            baseRef = baseRef->getArray().back();
+            baseRef = baseRef->getObject()[value.second]->getArray().back();
             std::cout << "[" << value.second << "]";
             std::cout << "->getArray()";
             arrayUsed = true;
@@ -63,23 +65,28 @@ void JSONParser::createString(const std::string& key) {
 
 void JSONParser::createArray(const std::string& key) {
     mRootJSON[key] = std::make_shared<RCU::JSONObject>();
-    for(auto value : mBreadcrumb) {
-        std::cout << "[" << value.second << "]->getObject()";
+    std::cout << "mRootJSON[root]";
+    std::shared_ptr<JSONContainerBase> baseRef = mRootJSON["root"];
+    for(auto& value : mBreadcrumb) {
+        if(&value == &mBreadcrumb.front()) continue;
+        baseRef = baseRef->getObject()[value.second];
+        std::cout << "->getObject()[" << value.second << "]";
     }
     mBreadcrumb.push_back(std::make_pair(JSON::Type::Array,key));
-    std::cout << "[" << key << "] = std::make_unique<RCU::JSONArray>()" << std::endl;
+    baseRef->getObject()[key] = std::make_shared<RCU::JSONArray>();
+    std::cout << "->getObject()[" << key << "] = std::make_shared<RCU::JSONArray>()" << std::endl;
 }
 
 void JSONParser::assignValue(const std::string& value) {
-    std::cout << "mRootJSON";
+    std::cout << "mRootJSON[root]";
     mTokenStack.pop();
-    std::string finalKey = mBreadcrumb.back().second;
+    std::string finalKey = mBreadcrumb.size() == 1 ? "root" : mBreadcrumb.back().second;
     std::shared_ptr<JSONContainerBase> baseRef = mRootJSON["root"];
     switch(mBreadcrumb.back().first) {
         case (JSON::Type::String):
-            mBreadcrumb.pop_back();
             for(auto& crumb : mBreadcrumb) {
                 if(&crumb == &mBreadcrumb.front()) continue;
+                if(&crumb == &mBreadcrumb.back()) continue;
                 if(crumb.first == JSON::Type::Array) {
                     baseRef = baseRef->getObject()[crumb.second]->getArray().back();
                     std::cout << "[" << crumb.second << "]->getArray().back()";
@@ -91,11 +98,12 @@ void JSONParser::assignValue(const std::string& value) {
             }
             baseRef->getObject()[finalKey] = std::make_shared<RCU::JSONString>(value);
             std::cout << "[" << finalKey << "] = std::make_shared<RCU::JSONString>(" << value << ")" << std::endl;
+            mBreadcrumb.pop_back();
             break;
         case (JSON::Type::Number):
-            mBreadcrumb.pop_back();
             for(auto& crumb : mBreadcrumb) {
                 if(&crumb == &mBreadcrumb.front()) continue;
+                if(&crumb == &mBreadcrumb.back()) continue;
                 if(crumb.first == JSON::Type::Array) {
                     baseRef = baseRef->getObject()[crumb.second]->getArray().back();
                     std::cout << "[" << crumb.second << "]->getArray().back()";
@@ -125,6 +133,7 @@ void JSONParser::assignValue(const std::string& value) {
                 baseRef->getObject()[finalKey] = std::make_shared<RCU::JSONBool>(bVal);
                 std::cout << "[" << finalKey << "] = std::make_shared<RCU::JSONNumber>(" << value << ")" << std::endl;
             }
+            mBreadcrumb.pop_back();
             break;
     }
                 

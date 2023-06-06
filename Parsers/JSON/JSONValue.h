@@ -71,12 +71,12 @@ struct JSONContainer : JSONContainerBase, JSONValue<T> {
 };
 
 struct JSONNumber : JSONContainer<float> {
-    JSONNumber(int val = 0) { Json.value = val; }
+    JSONNumber(float val = 0) { Json.value = val; }
     void setValue(float val) override { Json.value = val; }
     float getNumber() override { return Json.value; }
     std::string getString() override { return std::to_string(Json.value); }
     bool getBool() override { return (Json.value == 0) ? false : true; }
-    void printSelf(int level = 0.0f) override { 
+    void printSelf(int level = 0) override { 
         std::cout << getString() << std::endl;
     }
 };

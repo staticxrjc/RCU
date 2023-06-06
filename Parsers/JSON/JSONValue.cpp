@@ -10,6 +10,12 @@ namespace RCU
     // template <typename T>
     // JSONValue<T>::JSONValue(T val) : type(Type::Number), value(val) {}
 
+    template<>
+    RCU::JSONValue<float>::JSONValue() : type(JSON::Type::Number), value() {}
+    
+    template<>
+    RCU::JSONValue<float>::JSONValue(float val) : type(JSON::Type::Number), value(val) {}
+
     template<> 
     RCU::JSONValue<jObject>::JSONValue() : type(JSON::Type::Object), value() {}
 
