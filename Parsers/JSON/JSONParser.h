@@ -12,6 +12,7 @@ class JSONParser
 public:
     JSONParser();
     ~JSONParser();
+    std::shared_ptr<JSONContainerBase> getRootJSON();
     void parseData(const std::string& str);
     void printJson();
 private:

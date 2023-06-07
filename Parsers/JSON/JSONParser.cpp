@@ -12,10 +12,15 @@ void JSONParser::printJson() {
     mRootJSON["root"]->printSelf();
 }
 
+std::shared_ptr<JSONContainerBase> JSONParser::getRootJSON() {
+    return mRootJSON["root"];
+}
+
 void JSONParser::createObject(const std::string& key) {
     if (key != "") mBreadcrumb.push_back(std::make_pair(JSON::Type::Object,key));
-    std::cout << "mRootJSON";
+    std::cout << "mRootJSON[root]";
     if(key == "root" & mBreadcrumb.size() == 1) {
+        std::cout << " = std::make_shared<JSONObject>()" << std::endl;
         mRootJSON["root"] = std::make_shared<JSONObject>();
         return;
     }
@@ -26,7 +31,7 @@ void JSONParser::createObject(const std::string& key) {
         if (&value == &mBreadcrumb.front()) continue;
         if (&value == &mBreadcrumb.back()) // Last item
             if(value.first == JSON::Type::Array) {
-                std::cout << "getObject()[" << value.second << "]->getArray().emplace_back(std::make_shared<RCU::JSONObject>())" << std::endl;
+                std::cout << "->getObject()[" << value.second << "]->getArray().emplace_back(std::make_shared<RCU::JSONObject>())" << std::endl;
                 baseRef->getObject()[value.second]->getArray().emplace_back(std::make_shared<RCU::JSONObject>());
                 return;
             }
@@ -37,20 +42,18 @@ void JSONParser::createObject(const std::string& key) {
             }
         if(value.first == JSON::Type::Array) {
             baseRef = baseRef->getObject()[value.second]->getArray().back();
-            std::cout << "[" << value.second << "]";
-            std::cout << "->getArray()";
+            std::cout << "->getObject()[" << value.second << "]->getArray().back()";
             arrayUsed = true;
         }
         else if(value.first == JSON::Type::Object) {
             if(arrayUsed) {
-                std::cout << "->back()->getObject()";
+                std::cout << "->getArray().back()";
                 baseRef = baseRef->getArray().back();
             }
             else {
-                std::cout << "[" << value.second << "]";
+                std::cout << "getObject().at(" << value.second << ")";
                 if(mBreadcrumb.size() > 1) baseRef = baseRef->getObject().at(value.second);
             }
-            std::cout << "->getObject()";
         }
     }
 }
@@ -69,8 +72,14 @@ void JSONParser::createArray(const std::string& key) {
     std::shared_ptr<JSONContainerBase> baseRef = mRootJSON["root"];
     for(auto& value : mBreadcrumb) {
         if(&value == &mBreadcrumb.front()) continue;
-        baseRef = baseRef->getObject()[value.second];
-        std::cout << "->getObject()[" << value.second << "]";
+        if(value.first == JSON::Type::Array) {
+            std::cout << "->getObject()[" << value.second << "]->getArray().back()";
+            baseRef = baseRef->getObject()[value.second]->getArray().back();
+        }
+        else {
+            std::cout << "->getObject()[" << value.second << "]";
+            baseRef = baseRef->getObject()[value.second];
+        }
     }
     mBreadcrumb.push_back(std::make_pair(JSON::Type::Array,key));
     baseRef->getObject()[key] = std::make_shared<RCU::JSONArray>();
