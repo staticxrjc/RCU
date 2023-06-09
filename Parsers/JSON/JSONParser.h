@@ -14,6 +14,7 @@ public:
     ~JSONParser();
     std::shared_ptr<JSONContainerBase> getRootJSON();
     void parseData(const std::string& str);
+    void setDebug(bool debug);
     void printJson();
 private:
     JSON::Token checkToken(const char token);
@@ -25,6 +26,7 @@ private:
     void assignValue(const std::string& value);
     void printToken(const JSON::Token token);
     jObject mRootJSON;
+    bool mDebug;
     std::string rawData;
     std::stack<JSON::Token> mTokenStack;
     std::vector<std::pair<JSON::Type,std::string>> mBreadcrumb;

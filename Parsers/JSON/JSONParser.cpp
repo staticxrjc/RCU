@@ -5,7 +5,7 @@ namespace RCU
 {
 
 JSONParser::JSONParser() {
-
+    mDebug = false;
 }
 
 void JSONParser::printJson() {
@@ -18,9 +18,9 @@ std::shared_ptr<JSONContainerBase> JSONParser::getRootJSON() {
 
 void JSONParser::createObject(const std::string& key) {
     if (key != "") mBreadcrumb.push_back(std::make_pair(JSON::Type::Object,key));
-    std::cout << "mRootJSON[root]";
+    if (mDebug) std::cout << "mRootJSON[root]";
     if(key == "root" & mBreadcrumb.size() == 1) {
-        std::cout << " = std::make_shared<JSONObject>()" << std::endl;
+        if (mDebug) std::cout << " = std::make_shared<JSONObject>()" << std::endl;
         mRootJSON["root"] = std::make_shared<JSONObject>();
         return;
     }
@@ -31,27 +31,27 @@ void JSONParser::createObject(const std::string& key) {
         if (&value == &mBreadcrumb.front()) continue;
         if (&value == &mBreadcrumb.back()) // Last item
             if(value.first == JSON::Type::Array) {
-                std::cout << "->getObject()[" << value.second << "]->getArray().emplace_back(std::make_shared<RCU::JSONObject>())" << std::endl;
+                if (mDebug) std::cout << "->getObject()[" << value.second << "]->getArray().emplace_back(std::make_shared<RCU::JSONObject>())" << std::endl;
                 baseRef->getObject()[value.second]->getArray().emplace_back(std::make_shared<RCU::JSONObject>());
                 return;
             }
             else {
-                std::cout << "[" << value.second << "] = std::make_shared<RCU::JSONObject>()" << std::endl;
+                if (mDebug) std::cout << "[" << value.second << "] = std::make_shared<RCU::JSONObject>()" << std::endl;
                 baseRef->getObject()[value.second] = std::make_shared<RCU::JSONObject>();
                 return;
             }
         if(value.first == JSON::Type::Array) {
             baseRef = baseRef->getObject()[value.second]->getArray().back();
-            std::cout << "->getObject()[" << value.second << "]->getArray().back()";
+            if (mDebug) std::cout << "->getObject()[" << value.second << "]->getArray().back()";
             arrayUsed = true;
         }
         else if(value.first == JSON::Type::Object) {
             if(arrayUsed) {
-                std::cout << "->getArray().back()";
+                if (mDebug) std::cout << "->getArray().back()";
                 baseRef = baseRef->getArray().back();
             }
             else {
-                std::cout << "getObject().at(" << value.second << ")";
+                if (mDebug) std::cout << "getObject().at(" << value.second << ")";
                 if(mBreadcrumb.size() > 1) baseRef = baseRef->getObject().at(value.second);
             }
         }
@@ -68,26 +68,26 @@ void JSONParser::createString(const std::string& key) {
 
 void JSONParser::createArray(const std::string& key) {
     mRootJSON[key] = std::make_shared<RCU::JSONObject>();
-    std::cout << "mRootJSON[root]";
+    if (mDebug) std::cout << "mRootJSON[root]";
     std::shared_ptr<JSONContainerBase> baseRef = mRootJSON["root"];
     for(auto& value : mBreadcrumb) {
         if(&value == &mBreadcrumb.front()) continue;
         if(value.first == JSON::Type::Array) {
-            std::cout << "->getObject()[" << value.second << "]->getArray().back()";
+            if (mDebug) std::cout << "->getObject()[" << value.second << "]->getArray().back()";
             baseRef = baseRef->getObject()[value.second]->getArray().back();
         }
         else {
-            std::cout << "->getObject()[" << value.second << "]";
+            if (mDebug) std::cout << "->getObject()[" << value.second << "]";
             baseRef = baseRef->getObject()[value.second];
         }
     }
     mBreadcrumb.push_back(std::make_pair(JSON::Type::Array,key));
     baseRef->getObject()[key] = std::make_shared<RCU::JSONArray>();
-    std::cout << "->getObject()[" << key << "] = std::make_shared<RCU::JSONArray>()" << std::endl;
+    if (mDebug) std::cout << "->getObject()[" << key << "] = std::make_shared<RCU::JSONArray>()" << std::endl;
 }
 
 void JSONParser::assignValue(const std::string& value) {
-    std::cout << "mRootJSON[root]";
+    if (mDebug) std::cout << "mRootJSON[root]";
     mTokenStack.pop();
     std::string finalKey = mBreadcrumb.size() == 1 ? "root" : mBreadcrumb.back().second;
     std::shared_ptr<JSONContainerBase> baseRef = mRootJSON["root"];
@@ -98,15 +98,15 @@ void JSONParser::assignValue(const std::string& value) {
                 if(&crumb == &mBreadcrumb.back()) continue;
                 if(crumb.first == JSON::Type::Array) {
                     baseRef = baseRef->getObject()[crumb.second]->getArray().back();
-                    std::cout << "[" << crumb.second << "]->getArray().back()";
+                    if (mDebug) std::cout << "[" << crumb.second << "]->getArray().back()";
                 }
                 else {
                     baseRef = baseRef->getObject()[crumb.second];
-                    std::cout << "[" << crumb.second << "]->getObject()";
+                    if (mDebug) std::cout << "[" << crumb.second << "]->getObject()";
                 }
             }
             baseRef->getObject()[finalKey] = std::make_shared<RCU::JSONString>(value);
-            std::cout << "[" << finalKey << "] = std::make_shared<RCU::JSONString>(" << value << ")" << std::endl;
+            if (mDebug) std::cout << "[" << finalKey << "] = std::make_shared<RCU::JSONString>(" << value << ")" << std::endl;
             mBreadcrumb.pop_back();
             break;
         case (JSON::Type::Number):
@@ -115,11 +115,11 @@ void JSONParser::assignValue(const std::string& value) {
                 if(&crumb == &mBreadcrumb.back()) continue;
                 if(crumb.first == JSON::Type::Array) {
                     baseRef = baseRef->getObject()[crumb.second]->getArray().back();
-                    std::cout << "[" << crumb.second << "]->getArray().back()";
+                    if (mDebug) std::cout << "[" << crumb.second << "]->getArray().back()";
                 }
                 else {
                     baseRef = baseRef->getObject()[crumb.second];
-                    std::cout << "[" << crumb.second << "]->getObject()";
+                    if (mDebug) std::cout << "[" << crumb.second << "]->getObject()";
                 }
             }
             std::string processed = "";
@@ -135,12 +135,12 @@ void JSONParser::assignValue(const std::string& value) {
 
             if(number) {
                 baseRef->getObject()[finalKey] = std::make_shared<RCU::JSONNumber>(stof(value));
-                std::cout << "[" << finalKey << "] = std::make_shared<RCU::JSONNumber>(" << value << ")" << std::endl;
+                if (mDebug) std::cout << "[" << finalKey << "] = std::make_shared<RCU::JSONNumber>(" << value << ")" << std::endl;
 
             }
             else {
                 baseRef->getObject()[finalKey] = std::make_shared<RCU::JSONBool>(bVal);
-                std::cout << "[" << finalKey << "] = std::make_shared<RCU::JSONNumber>(" << value << ")" << std::endl;
+                if (mDebug) std::cout << "[" << finalKey << "] = std::make_shared<RCU::JSONNumber>(" << value << ")" << std::endl;
             }
             mBreadcrumb.pop_back();
             break;
@@ -150,15 +150,18 @@ void JSONParser::assignValue(const std::string& value) {
 
 void JSONParser::parseData(const std::string& data) {
     rawData = data;
+    mBreadcrumb.clear();
+    mTokenStack = std::stack<JSON::Token>();
+    mRootJSON = jObject();
     typedef struct wordTrack {
         std::string word = "";
         bool appendWord = false;
     } wordTrack;
     wordTrack keyValue;
 
-    std::cout << "----- Before Parse -----" << std::endl;
-    std::cout << rawData << std::endl;
-    std::cout << "----- After Parse -----" << std::endl;
+    if (mDebug) std::cout << "----- Before Parse -----" << std::endl;
+    if (mDebug) std::cout << rawData << std::endl;
+    if (mDebug) std::cout << "----- After Parse -----" << std::endl;
 
     for(int i = 0; i < rawData.length(); i++) {
         switch(checkToken(rawData[i])) {
@@ -198,7 +201,7 @@ void JSONParser::parseData(const std::string& data) {
                     case(JSON::Token::OPEN_CURLY):
                         break;
                     default:
-                        std::cout << "Condition on colon not defined: ";
+                        if (mDebug) std::cout << "Condition on colon not defined: ";
                         printToken(peakAhead(rawData,i));
                 }
                 break;
@@ -234,6 +237,10 @@ void JSONParser::parseData(const std::string& data) {
     }
 }
 
+void JSONParser::setDebug(bool debug) {
+    mDebug = debug;
+}
+
 JSON::Token JSONParser::peakAhead(const std::string& json, size_t ref) {
     JSON::Token token = JSON::Token::NONE;
     if((ref+1) >= json.length()) return JSON::Token::NONE;
@@ -249,28 +256,28 @@ JSON::Token JSONParser::peakAhead(const std::string& json, size_t ref) {
 void JSONParser::printToken(const JSON::Token token) {
     switch(token) {
         case(JSON::Token::OPEN_CURLY):
-            std::cout << "{" << std::endl;
+            if (mDebug) std::cout << "{" << std::endl;
             break;
         case(JSON::Token::CLOSE_CURLY):
-            std::cout << "}" << std::endl;
+            if (mDebug) std::cout << "}" << std::endl;
             break;
         case(JSON::Token::QUOTE):
-            std::cout << "\"" << std::endl;
+            if (mDebug) std::cout << "\"" << std::endl;
             break;
         case(JSON::Token::FORWARD_SLASH):
-            std::cout << "\\" << std::endl;
+            if (mDebug) std::cout << "\\" << std::endl;
             break;
         case(JSON::Token::COLON):
-            std::cout << ":" << std::endl;
+            if (mDebug) std::cout << ":" << std::endl;
             break;
         case(JSON::Token::OPEN_BRACKET):
-            std::cout << "[" << std::endl;
+            if (mDebug) std::cout << "[" << std::endl;
             break;
         case(JSON::Token::CLOSE_BRACKET):
-            std::cout << "]" << std::endl;
+            if (mDebug) std::cout << "]" << std::endl;
             break;
         case(JSON::Token::COMMA):
-            std::cout << "," << std::endl;
+            if (mDebug) std::cout << "," << std::endl;
             break;
     }
 
