@@ -8,7 +8,9 @@ enum class LogStatus {
     SUCCESS,
     FAILED_NETWORK,
     FAILED_FILE,
-    FAILED_GENERIC
+    FAILED_GENERIC,
+    DISABLED,
+    ENABLED
 };
     
 } // namespace RCU

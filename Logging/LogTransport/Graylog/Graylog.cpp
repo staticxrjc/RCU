@@ -17,13 +17,18 @@ Graylog::~Graylog() {
 
 RCU::LogStatus Graylog::sendLog(RCU::LogType level, std::string_view message, std::string_view fullMessage)
 {
+    if(!getStatus()) return RCU::LogStatus::DISABLED;
     std::string epochTime = std::to_string (_getTimeMs());
     epochTime.erase ( epochTime.find_last_not_of('0') + 1, std::string::npos );
     epochTime.erase ( epochTime.find_last_not_of('.') + 1, std::string::npos );
 
     {
         std::unique_lock lock(_mutex);
-        _logServer->connect();
+        if(_logServer->connect() != RCU::NetworkStatus::SUCCESS) {
+            disable();
+            _logServer->close();
+            return RCU::LogStatus::FAILED_NETWORK;
+        }
         _logServer->send("{\
     \"version\": \"1.1\",\
     \"host\": \""  + std::string(_serviceName) + "\",\
