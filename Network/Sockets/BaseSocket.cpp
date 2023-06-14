@@ -22,8 +22,10 @@ namespace RCU
     }
 
     RCU::NetworkStatus BaseSocket::init() {
-        if(_initialized)
+        if(_initialized) {
+            std::cout << "Initialization Failure" << std::endl;
             return RCU::NetworkStatus::INIT_FAILURE;
+        }
         #if defined(_WIN32) || defined(_WIN64)
             int result = WSAStartup(MAKEWORD(2,2),&_wsaData);
             if(result != 0) {

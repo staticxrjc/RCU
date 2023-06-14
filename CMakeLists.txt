@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 add_subdirectory(Threadpool)
 add_subdirectory(Network)
 add_subdirectory(Logging)
+add_subdirectory(Parsers)
 
 set(SFML_FILES RCUSFML.cpp RCUSFML.h)
 
@@ -19,6 +20,7 @@ add_library(
         Server
         Client
         Socket
+        JSONParser
     )
 
 set_source_files_properties(

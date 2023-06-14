@@ -6,6 +6,7 @@
 #include "Threadpool/ThreadpoolManager.h"
 #include "Network/Network.h"
 #include "Logging/Logger.h"
+#include "Parsers/Parsers.h"
 // #endif
 
 #ifdef SFML_UTIL

@@ -55,8 +55,10 @@ RCU::NetworkStatus ConnectSocket::connect() {
 }
 
 RCU::NetworkStatus ConnectSocket::send(const char * sendbuf) {
-    if(!_initialized)
+    if(!_initialized) {
+        printf("Not Initialized!\n");
         return RCU::NetworkStatus::NOT_INITIALIZED;
+    }
     #if defined(__linux__) || defined(_unix_)
         if(::send(_sock.Socket, sendbuf, strlen(sendbuf) , 0 )<0) {
             printf("send failed\n");
@@ -84,7 +86,7 @@ RCU::NetworkStatus ConnectSocket::recv() {
     _recvMessage = "";
 
     int nDataLength;
-    while ((nDataLength = ::recv(_sock.Socket, buffer, sizeof(buffer), 0)) >= 0) {
+    while ((nDataLength = ::recv(_sock.Socket, buffer, sizeof(buffer), 0)) > 0) {
         _recvMessage.append(buffer, nDataLength);
     }
 

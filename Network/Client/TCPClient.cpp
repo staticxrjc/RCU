@@ -12,6 +12,7 @@ RCU::NetworkStatus TCPClient::send(std::string_view sendbuf) {
         printf("FAILED TO SEND\n");
         return RCU::NetworkStatus::SEND_FAILURE;
     }
+    printf("SENT DATA\n");
     return RCU::NetworkStatus::SUCCESS;
 }
 
@@ -34,6 +35,7 @@ RCU::NetworkStatus TCPClient::connect() {
         printf("CONNECT FAILED\n");
         return RCU::NetworkStatus::CONNECT_ERROR;
     }
+    printf("CONNECTED\n");
     return RCU::NetworkStatus::SUCCESS;
 }
 
