@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace RCU
 {
@@ -53,14 +54,16 @@ public:
 
 struct JSONContainerBase {
     int tab = 2;
+    jObject nilO;
+    jArray nilA; 
     virtual void setValue(std::string val) {}
     virtual void setValue(float val) {}
     virtual void setValue(bool) {}
     virtual std::string getString() = 0;
     virtual float getNumber() = 0;
     virtual bool getBool() = 0;
-    virtual jObject& getObject() { jObject nil; return nil; }
-    virtual jArray& getArray() { jArray nil; return nil; }
+    virtual jObject& getObject() { return nilO; }
+    virtual jArray& getArray() { return nilA; }
     virtual void printSelf(int level = 0) {};
     void printSpaces(int spaces) { for(int i = 0; i < (spaces * tab); i++) { std::cout << " ";}}
 };
