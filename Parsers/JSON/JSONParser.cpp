@@ -134,7 +134,7 @@ void JSONParser::assignValue(const std::string& value) {
             }
 
             if(number) {
-                baseRef->getObject()[finalKey] = std::make_shared<RCU::JSONNumber>(stof(value));
+                baseRef->getObject()[finalKey] = std::make_shared<RCU::JSONNumber>(stod(value));
                 if (mDebug) std::cout << "[" << finalKey << "] = std::make_shared<RCU::JSONNumber>(" << value << ")" << std::endl;
 
             }

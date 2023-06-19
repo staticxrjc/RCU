@@ -11,10 +11,10 @@ namespace RCU
     // JSONValue<T>::JSONValue(T val) : type(Type::Number), value(val) {}
 
     template<>
-    RCU::JSONValue<float>::JSONValue() : type(JSON::Type::Number), value() {}
+    RCU::JSONValue<double>::JSONValue() : type(JSON::Type::Number), value() {}
     
     template<>
-    RCU::JSONValue<float>::JSONValue(float val) : type(JSON::Type::Number), value(val) {}
+    RCU::JSONValue<double>::JSONValue(double val) : type(JSON::Type::Number), value(val) {}
 
     template<> 
     RCU::JSONValue<jObject>::JSONValue() : type(JSON::Type::Object), value() {}
@@ -50,7 +50,7 @@ namespace RCU
 // }
 
 // Constructors
-template JSONValue<float>::JSONValue();
+template JSONValue<double>::JSONValue();
 template JSONValue<bool>::JSONValue();
 template JSONValue<std::string>::JSONValue(std::string val);
 template JSONValue<std::string>::JSONValue();
@@ -58,7 +58,7 @@ template JSONValue<jObject>::JSONValue();
 template JSONValue<jArray>::JSONValue();
 
 // Destructors
-template JSONValue<float>::~JSONValue();
+template JSONValue<double>::~JSONValue();
 template JSONValue<bool>::~JSONValue();
 template JSONValue<jObject>::~JSONValue();
 template JSONValue<jArray>::~JSONValue();

@@ -54,10 +54,10 @@ public:
 struct JSONContainerBase {
     int tab = 2;
     virtual void setValue(std::string val) {}
-    virtual void setValue(float val) {}
+    virtual void setValue(double val) {}
     virtual void setValue(bool) {}
     virtual std::string getString() = 0;
-    virtual float getNumber() = 0;
+    virtual double getNumber() = 0;
     virtual bool getBool() = 0;
     virtual jObject& getObject() { jObject nil; return nil; }
     virtual jArray& getArray() { jArray nil; return nil; }
@@ -70,10 +70,10 @@ struct JSONContainer : JSONContainerBase, JSONValue<T> {
     JSONValue<T> Json;
 };
 
-struct JSONNumber : JSONContainer<float> {
-    JSONNumber(float val = 0) { Json.value = val; }
-    void setValue(float val) override { Json.value = val; }
-    float getNumber() override { return Json.value; }
+struct JSONNumber : JSONContainer<double> {
+    JSONNumber(double val = 0) { Json.value = val; }
+    void setValue(double val) override { Json.value = val; }
+    double getNumber() override { return Json.value; }
     std::string getString() override { return std::to_string(Json.value); }
     bool getBool() override { return (Json.value == 0) ? false : true; }
     void printSelf(int level = 0) override { 
@@ -84,7 +84,7 @@ struct JSONNumber : JSONContainer<float> {
 struct JSONString : JSONContainer<std::string> {
     JSONString(std::string val = "") { Json.value = val; }
     void setValue(std::string val) override { Json.value = val; }
-    float getNumber() override { return std::stoi(Json.value); }
+    double getNumber() override { return std::stod(Json.value); }
     std::string getString() override { return Json.value; }
     bool getBool() override { return (Json.value == "true") ? true : false; }
     void printSelf(int level = 0) override { 
@@ -95,7 +95,7 @@ struct JSONString : JSONContainer<std::string> {
 struct JSONBool : JSONContainer<bool> {
     JSONBool(bool val = false) { Json.value = val; }
     void setValue(bool val) override { Json.value = val; }
-    float getNumber() override { return Json.value ? 1 : 0; }
+    double getNumber() override { return Json.value ? 1 : 0; }
     std::string getString() override { return Json.value ? "true" : "false"; }
     bool getBool() override { return Json.value; }
     void printSelf(int level = 0) override { 
@@ -104,7 +104,7 @@ struct JSONBool : JSONContainer<bool> {
 };
 
 struct JSONObject : JSONContainer<jObject> {
-    float getNumber() override { return 0; }
+    double getNumber() override { return 0; }
     std::string getString() override { return ""; }
     bool getBool() override { return true; }
     jObject& getObject() override { return Json.value; }
@@ -123,7 +123,7 @@ struct JSONObject : JSONContainer<jObject> {
 };
 
 struct JSONArray : JSONContainer<jArray> {
-    float getNumber() override { return 0; }
+    double getNumber() override { return 0; }
     std::string getString() override { return ""; }
     bool getBool() override { return true; }
     jArray& getArray() override { return Json.value; }
