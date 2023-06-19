@@ -4,50 +4,25 @@
 namespace RCU
 {
 
-    // template <>
-    // JSONValue<bool>::JSONValue(bool val) : type(Type::Boolean), value(val) {}
+template<>
+RCU::JSONValue<double>::JSONValue() : type(JSON::Type::Number), value() {}
 
-    // template <typename T>
-    // JSONValue<T>::JSONValue(T val) : type(Type::Number), value(val) {}
+template<>
+RCU::JSONValue<double>::JSONValue(double val) : type(JSON::Type::Number), value(val) {}
 
-    template<>
-    RCU::JSONValue<double>::JSONValue() : type(JSON::Type::Number), value() {}
-    
-    template<>
-    RCU::JSONValue<double>::JSONValue(double val) : type(JSON::Type::Number), value(val) {}
+template<> 
+RCU::JSONValue<jObject>::JSONValue() : type(JSON::Type::Object), value() {}
 
-    template<> 
-    RCU::JSONValue<jObject>::JSONValue() : type(JSON::Type::Object), value() {}
+template<>
+RCU::JSONValue<jArray>::JSONValue() : type(JSON::Type::Array), value() {}
+template<> 
+RCU::JSONValue<std::string>::JSONValue(std::string val) : type(JSON::Type::String), value(val) {}
 
-    template<>
-    RCU::JSONValue<jArray>::JSONValue() : type(JSON::Type::Array), value() {}
+template<typename T>
+JSONValue<T>::JSONValue() : type(JSON::Type::Null) {}
 
-    template<> 
-    RCU::JSONValue<std::string>::JSONValue() : type(JSON::Type::String), value("") {}
-
-    template<> 
-    RCU::JSONValue<std::string>::JSONValue(std::string val) : type(JSON::Type::String), value(val) {}
-
-    template<typename T>
-    JSONValue<T>::JSONValue() : type(JSON::Type::Null) {}
-
-    template<typename T>
-    JSONValue<T>::~JSONValue() {}
-
-
-    
-// Nested operator[] overload 
-// template<typename U>
-// JSONValue<U>& operator[](const std::string& key) {
-//     std::cout << key << std::endl;
-//     return value[key];
-// }
-
-// const nested operator[] overload
-// template<typename U>
-// const JSONValue<U>& operator[](const std::string& key) const {
-//     return value.at(key);
-// }
+template<typename T>
+JSONValue<T>::~JSONValue() {}
 
 // Constructors
 template JSONValue<double>::JSONValue();
