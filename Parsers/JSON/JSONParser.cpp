@@ -148,8 +148,15 @@ void JSONParser::assignValue(const std::string& value) {
                 
 }
 
-void JSONParser::parseData(const std::string& data) {
+int JSONParser::parseData(const std::string& data) {
     rawData = data;
+
+    std::string input = data;
+    input.erase(std::remove(input.begin(), input.end(), ' '), input.end());
+    input.erase(std::remove(input.begin(), input.end(), '\n'), input.end());
+    input.erase(std::remove(input.begin(), input.end(), '\r'), input.end());
+    
+    if (input.empty()) return -1;
     mBreadcrumb.clear();
     mTokenStack = std::stack<JSON::Token>();
     mRootJSON = jObject();
@@ -235,6 +242,7 @@ void JSONParser::parseData(const std::string& data) {
                 break;
             }
     }
+    return 1;
 }
 
 void JSONParser::setDebug(bool debug) {

@@ -13,7 +13,7 @@ public:
     JSONParser();
     ~JSONParser();
     std::shared_ptr<JSONContainerBase> getRootJSON();
-    void parseData(const std::string& str);
+    int parseData(const std::string& str);
     void setDebug(bool debug);
     void printJson();
 private:
