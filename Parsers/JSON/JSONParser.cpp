@@ -1,6 +1,8 @@
 #include "JSONParser.h"
 #include <iostream>
 
+#define DECIMAL_ACCURACY 1000
+
 namespace RCU
 {
 
@@ -134,7 +136,7 @@ void JSONParser::assignValue(const std::string& value) {
             }
 
             if(number) {
-                baseRef->getObject()[finalKey] = std::make_shared<RCU::JSONNumber>(stod(value));
+                baseRef->getObject()[finalKey] = std::make_shared<RCU::JSONNumber>(std::ceil(stod(value)*DECIMAL_ACCURACY)/DECIMAL_ACCURACY);
                 if (mDebug) std::cout << "[" << finalKey << "] = std::make_shared<RCU::JSONNumber>(" << value << ")" << std::endl;
 
             }
