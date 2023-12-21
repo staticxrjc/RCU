@@ -1,19 +1,13 @@
 #include "File.h"
 
 RCU::File::File(const std::string& file) : LogTransport() {
-    mOutputFile.open(file);
-    if (!mOutputFile) {
-        std::cerr << "Error opening " << file << "\n";
-    }
+    mFileName = file;
 }
 
 RCU::File::~File() {
-    if(mOutputFile.is_open())
-        mOutputFile.close();
 }
 
 RCU::LogStatus RCU::File::sendLog(RCU::LogType level, std::string_view message, std::string_view fullMessage) {
-    if(!mOutputFile.is_open()) return RCU::LogStatus::FAILED_FILE;
     std::stringstream fileOut;
         switch(level) {
             case RCU::LogType::FATAL:
@@ -40,7 +34,13 @@ RCU::LogStatus RCU::File::sendLog(RCU::LogType level, std::string_view message, 
             fileOut << "[FULLMESSAGE]:\n " << fullMessage << std::endl;
     {
         std::unique_lock lock(_mutex);
+        mOutputFile.open(mFileName, std::ios::app);
+        if(!mOutputFile.is_open()) return RCU::LogStatus::FAILED_FILE;
+
         mOutputFile << fileOut.str();
+
+        if(mOutputFile.is_open())
+            mOutputFile.close();
     }
     return RCU::LogStatus::SUCCESS;
 }

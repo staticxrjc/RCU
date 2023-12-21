@@ -17,6 +17,7 @@ namespace RCU
         RCU::LogStatus sendLog(RCU::LogType level, std::string_view message, std::string_view fullMessage) override;
     private:
         std::ofstream mOutputFile;
+        std::string mFileName;
     };
 
 } // namespace RCU
