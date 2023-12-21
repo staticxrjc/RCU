@@ -4,3 +4,4 @@ add_library(LogTransport
 
 add_subdirectory(Console)
 add_subdirectory(Graylog)
+add_subdirectory(File)

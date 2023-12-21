@@ -5,5 +5,6 @@ target_link_libraries(
     Logger 
     Console
     Graylog
+    File
     LogTransport
 )
