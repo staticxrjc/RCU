@@ -15,7 +15,7 @@ BaseClient::BaseClient(const char* ipAddress, int port, const char* name) {
 }
 
 BaseClient::~BaseClient() {
-    printf("Destroying Socket\n");
+    printf("Destroying ISocket\n");
     _connectSocket.reset();
 }
 

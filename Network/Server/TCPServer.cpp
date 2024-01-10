@@ -20,7 +20,7 @@ namespace RCU {
 
     void TCPServer::_handler(std::shared_ptr<RCU::Network> client) {
         std::cout << "Handling" << std::endl;
-        std::cout << "Client Socket: " << client->Socket << std::endl;
+        std::cout << "Client ISocket: " << client->Socket << std::endl;
         int result;
         const int MAX_HTTP_HEADER_SIZE = 1024;
         const char* delimiter = "\n";
@@ -50,7 +50,7 @@ namespace RCU {
 
     void TCPServer::_responder(std::shared_ptr<RCU::Network> client) {
         std::cout << "Responding" << std::endl;
-        std::cout << "Client Socket: " << client->Socket << std::endl;
+        std::cout << "Client ISocket: " << client->Socket << std::endl;
         int result;
         result = send(client->Socket,"Hello\r\n",(int)strlen("Hello\r\n"),0);
         #if defined(_WIN32) || defined(_WIN64)

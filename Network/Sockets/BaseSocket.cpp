@@ -47,9 +47,9 @@ namespace RCU
             }
         #endif // WINDOWS
         #if defined(__linux__) || defined(_unix_)
-            // Establish Socket
-            _sock.Socket = socket(_address.sin_family, _service, _protocol);
-            if(_sock.Socket == 0) {
+            // Establish ISocket
+            _sock.ISocket = socket(_address.sin_family, _service, _protocol);
+            if(_sock.ISocket == 0) {
                 std::cout << "Failed to create socket" << std::endl;
                 return RCU::NetworkStatus::SOCK_INIT_FAIL;
             }
@@ -67,8 +67,8 @@ namespace RCU
         if(!_initialized)
             return RCU::NetworkStatus::ALEADY_INITIALIZED;
         #if defined(__linux__) || defined(_unix_)
-            shutdown(_sock.Socket,SHUT_RDWR);
-            ::close(_sock.Socket);
+            shutdown(_sock.ISocket,SHUT_RDWR);
+            ::close(_sock.ISocket);
         #endif // LINUX
         #if defined(_WIN32) || defined(_WIN64)
             shutdown(_sock.Socket, SD_SEND);
